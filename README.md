@@ -1,1 +1,1 @@
-Simple image preprocessor I made while working on my first Keras binary classification convolutional neural network. Primarily loads RGB images from specified directories into size `(n, n, 3)` NumPy arrays. Its functionality will be expanded out of necessity.
+Simple image preprocessor I made while working on my first Keras binary classification convolutional neural network. Converts images from specified directories into NumPy arrays. Its functionality will be expanded out of necessity.
