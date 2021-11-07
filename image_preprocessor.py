@@ -3,20 +3,22 @@ import os
 import numpy as np
 
 class ImagePreprocessor:
-    def __init__(self, pixels=64, normalization=1, training_threshold=1, preprocess_method='square_resize'):
+    def __init__(self, pixels=64, normalization=1, training_threshold=1, resize_method='square_resize', color_mode='L'):
         '''
         Constructs the ImagePreprocessor object
 
         Args:
             pixels : Integer, number of pixels along each side of the processes image
-            normalization : Integer, divisor that squeezes the RGB values
+            normalization : Integer, divisor that squeezes the color values
             training_threshold : Float, threshold that determines the proportion of data to be used for training
-            preprocess_method : String, "square_resize" squeezes the images into squares and "square_crop" removes excess content to create a square image
+            resize_method : String, "square_resize" squeezes the images into squares and "square_crop" removes excess content to create a square image
+            color_mode : String, see Pillow Modes documentation at https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes
         '''
         self.pixels = pixels
         self.normalization = normalization
         self.training_threshold = training_threshold
-        self.preprocess_method = preprocess_method
+        self.resize_method = resize_method
+        self.color_mode = color_mode
     
     def load_directory_contents(self, path):
         '''
@@ -40,7 +42,7 @@ class ImagePreprocessor:
         Returns:
             PIL Image : Preprocessed image
         '''
-        if self.preprocess_method == 'square_crop':
+        if self.resize_method == 'square_crop':
             width, height = image.size
             h_cut = v_cut = 0
 
@@ -50,7 +52,8 @@ class ImagePreprocessor:
                 v_cut = (height - width)/2
 
             image = ImageOps.crop(image, (h_cut, v_cut, h_cut, v_cut))
-        image = image.resize((self.pixels, self.pixels), Image.BILINEAR).convert('RGB')
+        image = image.resize((self.pixels, self.pixels), Image.BILINEAR).convert(self.color_mode)
+        image.show()
         return image
 
     def directory_to_array(self, path):
